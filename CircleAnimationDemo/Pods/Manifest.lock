@@ -1,0 +1,13 @@
+PODS:
+  - Masonry (0.6.3)
+  - pop (1.0.8)
+
+DEPENDENCIES:
+  - Masonry
+  - pop
+
+SPEC CHECKSUMS:
+  Masonry: ff105a956abcd19a618b2028b121cb638d7a8e2f
+  pop: bb773ae2c791ca2629de13b347e7a8b450fa6a57
+
+COCOAPODS: 0.38.2
