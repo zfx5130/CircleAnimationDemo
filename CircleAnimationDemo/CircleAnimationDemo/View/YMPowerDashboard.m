@@ -6,9 +6,7 @@
 //  Copyright © 2015年 thomas. All rights reserved.
 //
 
-
-
-#import "CircleAnimationView.h"
+#import "YMPowerDashboard.h"
 
 #import "UILabel+custom.h"
 
@@ -19,14 +17,13 @@ static NSString *const kDefaultUnitLabelText = @"%";
 
 static const CGFloat kDefaultCircleWidth = 4.0f;
 static const CGFloat kDefaultCircleCount = 60.0f;
-static const CGFloat kDefaultPopSpringBounciness = 6.0f;
-
+static const CGFloat kDefaultPopSpringBounciness = 16.0f;
 static const CGFloat kDefalutUnitLabelFontSize = 16.0f;
 static const CGFloat kDefalutTitleLabelFontSize = 16.0f;
 static const CGFloat kDefalutBatteryLabelFontSize = 80.0f;
 static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 
-@interface CircleAnimationView ()
+@interface YMPowerDashboard ()
 
 @property (strong, nonatomic) CAShapeLayer *circleLayer;
 @property (strong, nonatomic) CAShapeLayer *innerCircleLayer;
@@ -34,16 +31,19 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 @property (strong, nonatomic) CAReplicatorLayer *replicatorLayer;
 @property (strong, nonatomic) CAReplicatorLayer *replicatorOtherLayer;
 @property (strong, nonatomic) CALayer *handleCircleLayer;
+@property (strong, nonatomic) CADisplayLink *displayLink;
 
 @property (strong, nonatomic) UILabel *titleLabel;
 @property (strong, nonatomic) UILabel *batteryLabel;
 @property (strong, nonatomic) UILabel *subTitleLabel;
 @property (strong, nonatomic) UILabel *unitLabel;
 @property (strong, nonatomic) UIView *circleView;
+@property (assign, nonatomic) CGFloat currentPercent;
+@property (assign, nonatomic) CGFloat percent;
 
 @end
 
-@implementation CircleAnimationView
+@implementation YMPowerDashboard
 
 #pragma mark - Lifecycle
 
@@ -53,9 +53,10 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
         self.backgroundColor = [UIColor clearColor];
         [self addReplicatorLayer];
         [self addReplicatorOtherLayer];
-        [self addCircleLayer];
-        [self addInnerCircleLayer];
-        [self addHandleCircle];
+//        [self addCircleLayer];
+//        [self addInnerCircleLayer];
+//        [self addHandleCircle];
+        self.currentPercent = 0.0f;
         [self setupViews];
     }
     return self;
@@ -73,14 +74,30 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
     self.titleLabel.text = title;
 }
 
-- (void)setBattery:(NSUInteger)battery {
-    _battery = battery;
-    self.batteryLabel.text = [NSString stringWithFormat:@"%@", @(battery)];
-}
-
 - (void)setSubTitle:(NSString *)subTitle {
     _subTitle = subTitle;
     self.subTitleLabel.text = subTitle;
+}
+
+- (void)setCurrentPercent:(CGFloat)currentPercent {
+    _currentPercent = currentPercent;
+    self.batteryLabel.text = [NSString stringWithFormat:@"%d", (int)(currentPercent * 100)];
+    [self setNeedsDisplay];
+}
+
+- (void)setAnimationInterval:(NSInteger)animationInterval {
+    _animationInterval = animationInterval;
+    self.displayLink.frameInterval = animationInterval;
+}
+
+#pragma mark - Getters
+
+- (CADisplayLink *)displayLink {
+    if (!_displayLink) {
+        _displayLink = [CADisplayLink displayLinkWithTarget:self
+                                                   selector:@selector(updatePowerWithAnimation:)];
+    }
+    return _displayLink;
 }
 
 #pragma mark - Private
@@ -181,6 +198,35 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
                                      forKey:@"layerStrokeAnimation"];
 }
 
+- (void)addHandleCircle {
+    
+    self.circleView = [[UIView alloc] init];
+    [self addSubview:self.circleView];
+    [self.circleView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
+    
+    self.circleView.backgroundColor = [UIColor clearColor];
+    self.handleCircleLayer = [CALayer layer];
+    self.handleCircleLayer.bounds = CGRectMake(0.0f, 0.0f, kDefaultCircleWidth, kDefaultCircleWidth);
+    self.handleCircleLayer.position =
+    CGPointMake(CGRectGetWidth(self.frame) * 0.5f - kDefaultCircleWidth * 0.5f,
+                kDefaultCircleWidth * 0.5f + 12.0f);
+    self.handleCircleLayer.cornerRadius = kDefaultCircleWidth * 0.5f;
+    self.handleCircleLayer.borderColor = [UIColor whiteColor].CGColor;
+    self.handleCircleLayer.borderWidth = 1.0f;
+    [self.circleView.layer addSublayer:self.handleCircleLayer];
+}
+
+- (void)addHandleCircleAnimationWithStrokeEnd:(CGFloat)strokeEnd {
+    CGAffineTransform endAngle =
+    CGAffineTransformMakeRotation((strokeEnd + 0.0045) * 360 * (M_PI / 180.0f));
+    [UIView animateWithDuration:0.15f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        self.circleView.transform = endAngle;
+        self.circleView.alpha = strokeEnd;
+    } completion:nil];
+}
+
 - (void)addReplicatorLayer {
     [self addReplicatorLayerWith:self.replicatorLayer
                      circleCount:kDefaultCircleCount
@@ -221,35 +267,6 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
                   forKey:nil];
 }
 
-- (void)addHandleCircle {
-    
-    self.circleView = [[UIView alloc] init];
-    [self addSubview:self.circleView];
-    [self.circleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
-    }];
-    
-    self.circleView.backgroundColor = [UIColor clearColor];
-    self.handleCircleLayer = [CALayer layer];
-    self.handleCircleLayer.bounds = CGRectMake(0.0f, 0.0f, kDefaultCircleWidth, kDefaultCircleWidth);
-    self.handleCircleLayer.position =
-    CGPointMake(CGRectGetWidth(self.frame) * 0.5f - kDefaultCircleWidth * 0.5f,
-                kDefaultCircleWidth * 0.5f + 12.0f);
-    self.handleCircleLayer.cornerRadius = kDefaultCircleWidth * 0.5f;
-    self.handleCircleLayer.borderColor = [UIColor whiteColor].CGColor;
-    self.handleCircleLayer.borderWidth = 1.0f;
-    [self.circleView.layer addSublayer:self.handleCircleLayer];
-}
-
-- (void)addHandleCircleAnimationWithStrokeEnd:(CGFloat)strokeEnd {
-    CGAffineTransform endAngle =
-    CGAffineTransformMakeRotation((strokeEnd + 0.0045) * 360 * (M_PI / 180.0f));
-    [UIView animateWithDuration:0.15f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        self.circleView.transform = endAngle;
-        self.circleView.alpha = strokeEnd;
-    } completion:nil];
-}
-
 - (void)setupViews {
     [self setupTitleLabel];
     [self setupBatteryLabel];
@@ -266,8 +283,9 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
     [self addSubview:self.titleLabel];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.titleLabel.superview);
-        make.top.mas_equalTo(70);
-        make.size.mas_equalTo(CGSizeMake(100.0f, 35.0f));
+        CGFloat width = sqrt(pow(CGRectGetWidth(self.frame) * 0.5f, 2) - pow(CGRectGetHeight(self.batteryLabel.frame) * 0.5, 2));
+        make.width.lessThanOrEqualTo(@(width));
+        make.height.mas_equalTo(@35);
     }];
 }
 
@@ -279,9 +297,10 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
     [self addSubview:self.batteryLabel];
     [self.batteryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.titleLabel);
-        make.top.equalTo(self.titleLabel.mas_bottom);
+        make.centerY.equalTo(self.titleLabel.superview);
         make.height.mas_equalTo(60.0f);
-        make.width.lessThanOrEqualTo(@150);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.width.lessThanOrEqualTo(self.titleLabel.mas_width);
     }];
 }
 
@@ -296,7 +315,7 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
         make.centerX.equalTo(self.titleLabel);
         make.top.equalTo(self.batteryLabel.mas_bottom);
         make.height.equalTo(self.titleLabel.mas_height);
-        make.width.lessThanOrEqualTo(@200);
+        make.width.equalTo(self.titleLabel.mas_width);
     }];
 }
 
@@ -309,35 +328,75 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
     [self addSubview:self.unitLabel];
     [self.unitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.and.height.mas_equalTo(15.0f);
-        make.left.equalTo(self.batteryLabel.mas_right).offset(-5);
+        make.left.equalTo(self.batteryLabel.mas_right).offset(-3);
         make.top.equalTo(self.titleLabel.mas_bottom);
     }];
 }
 
+- (void)startDisplayLink {
+    [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop]
+                           forMode:NSDefaultRunLoopMode];
+}
+
+- (void)updatePowerWithAnimation:(CADisplayLink *)displayLink {
+    NSUInteger percentInteger = [@(self.percent * 100.0f) integerValue];
+    NSUInteger currentPrecentInteger = [@(self.currentPercent * 100.0f) integerValue];
+    CGFloat interval = displayLink.frameInterval / 100.0f;
+    if (currentPrecentInteger < percentInteger) {
+        self.currentPercent += interval;
+    } else if (currentPrecentInteger > percentInteger) {
+        self.currentPercent -= interval;
+    } else {
+        [self stopDisplayLink];
+    }
+}
+
+- (void)stopDisplayLink {
+    [self.displayLink invalidate];
+    self.displayLink = nil;
+}
+
 #pragma mark - Public 
 
-- (void)setStrokeEnd:(CGFloat)strokeEnd animated:(BOOL)animated {
+- (void)setPercent:(CGFloat)percent
+       animationed:(BOOL)animationed {
+    _percent = percent;
+    if (animationed) {
+        [self startDisplayLink];
+    } else {
+        self.currentPercent = percent;
+    }
+}
+
+/*
+- (void)setStrokeEnd:(CGFloat)strokeEnd
+            animated:(BOOL)animated {
     if (animated) {
         [self animateToStrokeEnd:strokeEnd];
     } else {
         self.circleLayer.strokeEnd = strokeEnd;
         self.innerCircleLayer.strokeEnd = strokeEnd;
     }
+    self.batteryLabel.text = [NSString stringWithFormat:@"%d", (int)(strokeEnd * 100)];
     [self addHandleCircleAnimationWithStrokeEnd:strokeEnd];
+    [self setNeedsDisplay];
 }
+*/
+
+#pragma mark - Lifecycle
 
 - (void)drawRect:(CGRect)rect {
     
     /****************方法2,画细线和线头的圆(少渐变色) ***/
-//    CGFloat width = CGRectGetWidth(rect);
-//    CGFloat height = CGRectGetHeight(rect);
-//    CGFloat centerX = width * 0.5f;
-//    CGFloat centerY = height * 0.5f;
-//    CGFloat lineWidth = 4.0f;
-//    CGFloat radius = width * 0.5f - lineWidth * 0.5f;
-//    CGFloat innerRadius = radius - 10.0f;
-//    //int scaleCount = 60;
-//    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGFloat width = CGRectGetWidth(rect);
+    CGFloat height = CGRectGetHeight(rect);
+    CGFloat centerX = width * 0.5f;
+    CGFloat centerY = height * 0.5f;
+    CGFloat lineWidth = 4.0f;
+    CGFloat radius = width * 0.5f - lineWidth * 0.5f;
+    CGFloat innerRadius = radius - 10.0f;
+    //int scaleCount = 60;
+    CGContextRef context = UIGraphicsGetCurrentContext();
 //    for (int i = 0; i < scaleCount; i++) {
 //        CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, 0.6f);
 //        CGContextSetLineWidth(context, lineWidth);
@@ -360,26 +419,35 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 //        CGContextStrokeLineSegments(context, line, 2);
 //        CGContextRestoreGState(context);
 //    }
-//    
-
-//    CGContextBeginPath(context);
-//  //  CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, 0.3f);
-//    CGContextSetLineWidth(context, 1);
-//    CGContextSetLineCap(context, kCGLineCapRound);
-//    CGMutablePathRef pathMain = CGPathCreateMutable();
-//    CGPathAddArc(pathMain, NULL, centerX, centerY, innerRadius, 3 * M_PI / 2, 3 * M_PI / 2 + 2 * M_PI * 0.5f, NO);
-//    CGContextAddPath(context, pathMain);
-//    CGContextStrokePath(context);
-//    
-//    CGContextBeginPath(context);
-//   // CGContextSetRGBFillColor(context, 255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0, 1.0f);
-//    CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, 0.3f);
-//    CGContextTranslateCTM(context, centerX, centerY);
-//    CGContextSaveGState(context);
-//    CGContextRotateCTM(context, 2 * M_PI * 0.5f);
-//    CGContextStrokeEllipseInRect(context, CGRectMake(0.0f, - innerRadius - 2, 4, 4));
-//    CGContextRestoreGState(context);
+//
     
+    CGContextBeginPath(context);
+    CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, 1.0f);
+    CGContextSetLineWidth(context, 4);
+    CGContextSetLineCap(context, kCGLineCapRound);
+    CGMutablePathRef pathM = CGPathCreateMutable();
+    CGPathAddArc(pathM, NULL, centerX, centerY, radius, 3 * M_PI / 2, 3 * M_PI / 2 + 2 * M_PI * self.currentPercent, NO);
+    CGContextAddPath(context, pathM);
+    CGContextStrokePath(context);
+
+    CGContextBeginPath(context);
+    CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, self.currentPercent);
+    CGContextSetLineWidth(context, 1);
+    CGContextSetLineCap(context, kCGLineCapRound);
+    CGMutablePathRef pathMain = CGPathCreateMutable();
+    CGPathAddArc(pathMain, NULL, centerX, centerY, innerRadius, 3 * M_PI / 2, 3 * M_PI / 2 + 2 * M_PI * self.currentPercent, NO);
+    CGContextAddPath(context, pathMain);
+    CGContextStrokePath(context);
+    
+    CGContextBeginPath(context);
+    CGContextSetRGBFillColor(context, 255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0, 1.0f);
+    CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, self.currentPercent);
+    CGContextTranslateCTM(context, centerX, centerY);
+    CGContextSaveGState(context);
+    CGContextRotateCTM(context, 2 * M_PI * self.currentPercent);
+    CGContextStrokeEllipseInRect(context, CGRectMake(0.0f, - innerRadius - 2, 4, 4));
+    CGContextRestoreGState(context);
+
 }
 
 @end

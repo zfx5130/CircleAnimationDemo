@@ -12,16 +12,22 @@
 #define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
 
 #import "ViewController.h"
-#import "CircleAnimationView.h"
+#import "YMPowerDashboard.h"
+#import "StarBlindView.h"
+
 #import <Masonry.h>
 
 @interface ViewController ()
 
-@property (strong, nonatomic) CircleAnimationView *circleAnimationView;
+@property (strong, nonatomic) YMPowerDashboard *circleAnimationView;
 
 @property (strong, nonatomic) UIImageView *bgimageView;
 
 @property (strong, nonatomic) UIImageView *otherbgImageView;
+
+@property (strong, nonatomic) UIView *starBlindView;
+
+@property (strong, nonatomic) CADisplayLink *displayLink;
 
 @end
 
@@ -62,15 +68,19 @@
         make.edges.equalTo(self.view);
     }];
     
-    
+//    //star
+//    self.starBlindView = [[StarBlindView alloc] init];
+//    [self.view addSubview:self.starBlindView];
+//    [self.starBlindView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.equalTo(self.view);
+//    }];
     
     CGRect frame = CGRectMake((SCREEN_WIDTH - 260.0f) * 0.5f, 80.0f, 260.0f, 260.0f);
-    self.circleAnimationView = [[CircleAnimationView alloc] initWithFrame:frame];
+    self.circleAnimationView = [[YMPowerDashboard alloc] initWithFrame:frame];
     self.circleAnimationView.strokeColor = [UIColor whiteColor];
-    [self.circleAnimationView setStrokeEnd:0.6
-                                  animated:NO];
+    [self.circleAnimationView setPercent:0.8f
+                             animationed:YES];
     self.circleAnimationView.title = @"剩余电量";
-    self.circleAnimationView.battery = 60;
     self.circleAnimationView.subTitle = [NSString stringWithFormat:@"可行驶%.1fkm",0.6 * 55];
     [self.view addSubview:self.circleAnimationView];
     [self.circleAnimationView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -79,16 +89,7 @@
         make.top.mas_equalTo(130.0f);
     }];
     
-//    NSUInteger count = 60;
-//    for (int i = 0; i < 60; i++) {
-//        UIView *circleView = [[UIView alloc] init];
-//        CGFloat left = frame.origin.x + 10.0f;
-//        CGFloat top = frame.origin.y + 10.0f;
-//        circleView.frame = CGRectMake(<#CGFloat x#>, <#CGFloat y#>, 4.0f, 4.0f);
-//        circleView.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.6f];
-//        [self.view addSubview:circleView];
-//    }
-    
+    //slider
     CGRect sliderFrame = CGRectMake(10.0f, SCREEN_HEIGHT - 40.0f, SCREEN_WIDTH - 20.0f, 20.0f);
     UISlider *slider = [[UISlider alloc] initWithFrame:sliderFrame];
     slider.minimumTrackTintColor = [UIColor whiteColor];
@@ -101,10 +102,10 @@
 
 #pragma mark - Handlers
 
+
 - (void)setStrokeEndValue:(UISlider *)sender {
-    [self.circleAnimationView setStrokeEnd:sender.value
-                                  animated:NO];
-    self.circleAnimationView.battery = sender.value * 100;
+    [self.circleAnimationView setPercent:sender.value
+                             animationed:YES];
     self.circleAnimationView.subTitle =
     [NSString stringWithFormat:@"可行驶%.1fkm",sender.value * 55];
 }
