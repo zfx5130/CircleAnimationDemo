@@ -31,12 +31,12 @@
 @property (assign, nonatomic) NSInteger animationInterval;
 
 /**
- *  set animation percent with animation, defalut the animation is NO,
+ *  set percent animated
  *
- *  @param percent   animation percent
- *  @param animationed animation
+ *  @param percent  percent
+ *  @param animated animated
  */
 - (void)setPercent:(CGFloat)percent
-       animationed:(BOOL)animationed;
+          animated:(BOOL)animated;
 
 @end

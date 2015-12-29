@@ -19,8 +19,6 @@
 		D7CB17161C28F2C300347C66 /* CircleAnimationDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CB17151C28F2C300347C66 /* CircleAnimationDemoTests.m */; };
 		D7CB17211C28F2C300347C66 /* CircleAnimationDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CB17201C28F2C300347C66 /* CircleAnimationDemoUITests.m */; };
 		D7CB17351C28F62A00347C66 /* YMPowerDashboard.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CB17341C28F62A00347C66 /* YMPowerDashboard.m */; };
-		D7D7AF251C31298C000D7775 /* MiPassport.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D7D7AF231C31298C000D7775 /* MiPassport.bundle */; };
-		D7D7AF261C31298C000D7775 /* MiPassport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D7AF241C31298C000D7775 /* MiPassport.framework */; };
 		D7EB2D0E1C2BA1CD001674FD /* UILabel+custom.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EB2D0D1C2BA1CD001674FD /* UILabel+custom.m */; };
 		D7EB2D111C2BA20F001674FD /* NSString+custom.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EB2D101C2BA20F001674FD /* NSString+custom.m */; };
 /* End PBXBuildFile section */
@@ -66,8 +64,6 @@
 		D7CB17221C28F2C300347C66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7CB17331C28F62A00347C66 /* YMPowerDashboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YMPowerDashboard.h; sourceTree = "<group>"; };
 		D7CB17341C28F62A00347C66 /* YMPowerDashboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YMPowerDashboard.m; sourceTree = "<group>"; };
-		D7D7AF231C31298C000D7775 /* MiPassport.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MiPassport.bundle; sourceTree = "<group>"; };
-		D7D7AF241C31298C000D7775 /* MiPassport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MiPassport.framework; sourceTree = "<group>"; };
 		D7EB2D0C1C2BA1CD001674FD /* UILabel+custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+custom.h"; sourceTree = "<group>"; };
 		D7EB2D0D1C2BA1CD001674FD /* UILabel+custom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+custom.m"; sourceTree = "<group>"; };
 		D7EB2D0F1C2BA20F001674FD /* NSString+custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+custom.h"; sourceTree = "<group>"; };
@@ -79,7 +75,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7D7AF261C31298C000D7775 /* MiPassport.framework in Frameworks */,
 				38144B53FA0CAE58D4C82301 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -211,7 +206,6 @@
 		D7CB17311C28F45100347C66 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				D7D7AF221C31298C000D7775 /* SDK */,
 				D73435961C2D15720065A1CA /* Assets.xcassets */,
 			);
 			path = Resource;
@@ -226,15 +220,6 @@
 				D73435831C2CF0BF0065A1CA /* StarBlindView.m */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		D7D7AF221C31298C000D7775 /* SDK */ = {
-			isa = PBXGroup;
-			children = (
-				D7D7AF231C31298C000D7775 /* MiPassport.bundle */,
-				D7D7AF241C31298C000D7775 /* MiPassport.framework */,
-			);
-			path = SDK;
 			sourceTree = "<group>";
 		};
 		D7EB2D0B1C2BA19F001674FD /* Category */ = {
@@ -354,7 +339,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D73435AC1C2D234C0065A1CA /* Info.plist in Resources */,
-				D7D7AF251C31298C000D7775 /* MiPassport.bundle in Resources */,
 				D7CB170B1C28F2C300347C66 /* LaunchScreen.storyboard in Resources */,
 				D73435981C2D15720065A1CA /* Assets.xcassets in Resources */,
 				D7CB17061C28F2C300347C66 /* Main.storyboard in Resources */,
@@ -565,11 +549,6 @@
 			baseConfigurationReference = 1ED14C89DF011CC350E163E3 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/CircleAnimationDemo/Resource/SDK",
-				);
 				INFOPLIST_FILE = CircleAnimationDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -583,11 +562,6 @@
 			baseConfigurationReference = B61A23AB4A4DA44521F4B93D /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/CircleAnimationDemo/Resource/SDK",
-				);
 				INFOPLIST_FILE = CircleAnimationDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

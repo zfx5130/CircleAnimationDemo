@@ -75,11 +75,13 @@
 //        make.edges.equalTo(self.view);
 //    }];
     
+    CGFloat defaultValue = 1.0f;
     CGRect frame = CGRectMake((SCREEN_WIDTH - 260.0f) * 0.5f, 80.0f, 260.0f, 260.0f);
     self.circleAnimationView = [[YMPowerDashboard alloc] initWithFrame:frame];
+    self.circleAnimationView.animationInterval = 1.5f;
     self.circleAnimationView.strokeColor = [UIColor whiteColor];
-    [self.circleAnimationView setPercent:0.8f
-                             animationed:YES];
+    [self.circleAnimationView setPercent:defaultValue
+                                animated:YES];
     self.circleAnimationView.title = @"剩余电量";
     self.circleAnimationView.subTitle = [NSString stringWithFormat:@"可行驶%.1fkm",0.6 * 55];
     [self.view addSubview:self.circleAnimationView];
@@ -92,11 +94,12 @@
     //slider
     CGRect sliderFrame = CGRectMake(10.0f, SCREEN_HEIGHT - 40.0f, SCREEN_WIDTH - 20.0f, 20.0f);
     UISlider *slider = [[UISlider alloc] initWithFrame:sliderFrame];
+    slider.continuous = NO;
     slider.minimumTrackTintColor = [UIColor whiteColor];
     [slider addTarget:self
                action:@selector(setStrokeEndValue:)
      forControlEvents:UIControlEventValueChanged];
-    slider.value = 0.5f;
+    slider.value = defaultValue;
     [self.view addSubview:slider];
 }
 
@@ -105,7 +108,7 @@
 
 - (void)setStrokeEndValue:(UISlider *)sender {
     [self.circleAnimationView setPercent:sender.value
-                             animationed:YES];
+                                animated:YES];
     self.circleAnimationView.subTitle =
     [NSString stringWithFormat:@"可行驶%.1fkm",sender.value * 55];
 }

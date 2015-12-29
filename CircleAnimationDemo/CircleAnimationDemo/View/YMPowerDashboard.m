@@ -38,8 +38,10 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 @property (strong, nonatomic) UILabel *subTitleLabel;
 @property (strong, nonatomic) UILabel *unitLabel;
 @property (strong, nonatomic) UIView *circleView;
-@property (assign, nonatomic) CGFloat currentPercent;
-@property (assign, nonatomic) CGFloat percent;
+@property (assign, nonatomic) CGFloat startValue;
+@property (assign, nonatomic) CGFloat endValue;
+@property (assign, nonatomic) CGFloat currentValue;
+@property (assign, nonatomic) CFTimeInterval beginTime;
 
 @end
 
@@ -56,7 +58,7 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 //        [self addCircleLayer];
 //        [self addInnerCircleLayer];
 //        [self addHandleCircle];
-        self.currentPercent = 0.0f;
+        self.animationInterval = 1.0f;
         [self setupViews];
     }
     return self;
@@ -79,15 +81,10 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
     self.subTitleLabel.text = subTitle;
 }
 
-- (void)setCurrentPercent:(CGFloat)currentPercent {
-    _currentPercent = currentPercent;
-    self.batteryLabel.text = [NSString stringWithFormat:@"%d", (int)(currentPercent * 100)];
+- (void)setCurrentValue:(CGFloat)currentValue {
+    _currentValue = currentValue;
+    self.batteryLabel.text = [NSString stringWithFormat:@"%d", (int)(currentValue * 100)];
     [self setNeedsDisplay];
-}
-
-- (void)setAnimationInterval:(NSInteger)animationInterval {
-    _animationInterval = animationInterval;
-    self.displayLink.frameInterval = animationInterval;
 }
 
 #pragma mark - Getters
@@ -95,7 +92,7 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 - (CADisplayLink *)displayLink {
     if (!_displayLink) {
         _displayLink = [CADisplayLink displayLinkWithTarget:self
-                                                   selector:@selector(updatePowerWithAnimation:)];
+                                                   selector:@selector(updatePower)];
     }
     return _displayLink;
 }
@@ -199,7 +196,6 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 }
 
 - (void)addHandleCircle {
-    
     self.circleView = [[UIView alloc] init];
     [self addSubview:self.circleView];
     [self.circleView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -281,9 +277,9 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
                                                   alpha:0.6f];
     self.titleLabel.font = [UIFont systemFontOfSize:kDefalutTitleLabelFontSize];
     [self addSubview:self.titleLabel];
+    CGFloat width = sqrt(pow(CGRectGetWidth(self.frame) * 0.5f - 30.0f, 2) - pow(CGRectGetHeight(self.batteryLabel.frame) * 0.5, 2)) * 2.0f;
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.titleLabel.superview);
-        CGFloat width = sqrt(pow(CGRectGetWidth(self.frame) * 0.5f, 2) - pow(CGRectGetHeight(self.batteryLabel.frame) * 0.5, 2));
         make.width.lessThanOrEqualTo(@(width));
         make.height.mas_equalTo(@35);
     }];
@@ -334,24 +330,27 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 }
 
 - (void)startDisplayLink {
+    [self stopDisplayLink];
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop]
-                           forMode:NSDefaultRunLoopMode];
+                           forMode:NSRunLoopCommonModes];
+    self.displayLink.paused = NO;
+    self.beginTime = CACurrentMediaTime();
 }
 
-- (void)updatePowerWithAnimation:(CADisplayLink *)displayLink {
-    NSUInteger percentInteger = [@(self.percent * 100.0f) integerValue];
-    NSUInteger currentPrecentInteger = [@(self.currentPercent * 100.0f) integerValue];
-    CGFloat interval = displayLink.frameInterval / 100.0f;
-    if (currentPrecentInteger < percentInteger) {
-        self.currentPercent += interval;
-    } else if (currentPrecentInteger > percentInteger) {
-        self.currentPercent -= interval;
-    } else {
+- (void)updatePower {
+    CGFloat percent = (CACurrentMediaTime() - self.beginTime) / self.animationInterval / fabs(self.endValue
+     - self.startValue);
+    percent = percent > 1 ? 1.0f : percent;
+    percent = percent < 0 ? 0.0f : percent;
+    self.currentValue = self.startValue + (self.endValue - self.startValue) * percent;
+    if (self.currentValue == self.endValue) {
+        self.startValue = self.endValue;
         [self stopDisplayLink];
     }
 }
 
 - (void)stopDisplayLink {
+    self.displayLink.paused = YES;
     [self.displayLink invalidate];
     self.displayLink = nil;
 }
@@ -359,12 +358,13 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 #pragma mark - Public 
 
 - (void)setPercent:(CGFloat)percent
-       animationed:(BOOL)animationed {
-    _percent = percent;
-    if (animationed) {
+          animated:(BOOL)animated {
+    self.endValue = percent;
+    if (animated) {
         [self startDisplayLink];
     } else {
-        self.currentPercent = percent;
+        self.currentValue = percent;
+        self.startValue = self.endValue;
     }
 }
 
@@ -426,25 +426,25 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
     CGContextSetLineWidth(context, 4);
     CGContextSetLineCap(context, kCGLineCapRound);
     CGMutablePathRef pathM = CGPathCreateMutable();
-    CGPathAddArc(pathM, NULL, centerX, centerY, radius, 3 * M_PI / 2, 3 * M_PI / 2 + 2 * M_PI * self.currentPercent, NO);
+    CGPathAddArc(pathM, NULL, centerX, centerY, radius, 3 * M_PI / 2, 3 * M_PI / 2 + 2 * M_PI * self.currentValue, NO);
     CGContextAddPath(context, pathM);
     CGContextStrokePath(context);
 
     CGContextBeginPath(context);
-    CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, self.currentPercent);
+    CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, self.currentValue);
     CGContextSetLineWidth(context, 1);
     CGContextSetLineCap(context, kCGLineCapRound);
     CGMutablePathRef pathMain = CGPathCreateMutable();
-    CGPathAddArc(pathMain, NULL, centerX, centerY, innerRadius, 3 * M_PI / 2, 3 * M_PI / 2 + 2 * M_PI * self.currentPercent, NO);
+    CGPathAddArc(pathMain, NULL, centerX, centerY, innerRadius, 3 * M_PI / 2, 3 * M_PI / 2 + 2 * M_PI * self.currentValue, NO);
     CGContextAddPath(context, pathMain);
     CGContextStrokePath(context);
     
     CGContextBeginPath(context);
     CGContextSetRGBFillColor(context, 255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0, 1.0f);
-    CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, self.currentPercent);
+    CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, self.currentValue);
     CGContextTranslateCTM(context, centerX, centerY);
     CGContextSaveGState(context);
-    CGContextRotateCTM(context, 2 * M_PI * self.currentPercent);
+    CGContextRotateCTM(context, 2 * M_PI * self.currentValue);
     CGContextStrokeEllipseInRect(context, CGRectMake(0.0f, - innerRadius - 2, 4, 4));
     CGContextRestoreGState(context);
 
