@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		38144B53FA0CAE58D4C82301 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CA6A4BDFEF9B61159C66A4 /* libPods.a */; };
-		D73435841C2CF0BF0065A1CA /* StarBlindView.m in Sources */ = {isa = PBXBuildFile; fileRef = D73435831C2CF0BF0065A1CA /* StarBlindView.m */; };
+		D73435841C2CF0BF0065A1CA /* StarsView.m in Sources */ = {isa = PBXBuildFile; fileRef = D73435831C2CF0BF0065A1CA /* StarsView.m */; };
 		D73435981C2D15720065A1CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D73435961C2D15720065A1CA /* Assets.xcassets */; };
 		D734359C1C2D15880065A1CA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D734359B1C2D15880065A1CA /* AppDelegate.m */; };
 		D734359F1C2D15940065A1CA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D734359E1C2D15940065A1CA /* ViewController.m */; };
@@ -44,8 +44,8 @@
 		03CA6A4BDFEF9B61159C66A4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1ED14C89DF011CC350E163E3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B61A23AB4A4DA44521F4B93D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		D73435821C2CF0BF0065A1CA /* StarBlindView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarBlindView.h; sourceTree = "<group>"; };
-		D73435831C2CF0BF0065A1CA /* StarBlindView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StarBlindView.m; sourceTree = "<group>"; };
+		D73435821C2CF0BF0065A1CA /* StarsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarsView.h; sourceTree = "<group>"; };
+		D73435831C2CF0BF0065A1CA /* StarsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StarsView.m; sourceTree = "<group>"; };
 		D73435961C2D15720065A1CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D734359A1C2D15880065A1CA /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D734359B1C2D15880065A1CA /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -216,8 +216,8 @@
 			children = (
 				D7CB17331C28F62A00347C66 /* YMPowerDashboard.h */,
 				D7CB17341C28F62A00347C66 /* YMPowerDashboard.m */,
-				D73435821C2CF0BF0065A1CA /* StarBlindView.h */,
-				D73435831C2CF0BF0065A1CA /* StarBlindView.m */,
+				D73435821C2CF0BF0065A1CA /* StarsView.h */,
+				D73435831C2CF0BF0065A1CA /* StarsView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -402,7 +402,7 @@
 				D734359F1C2D15940065A1CA /* ViewController.m in Sources */,
 				D7CB17351C28F62A00347C66 /* YMPowerDashboard.m in Sources */,
 				D7EB2D111C2BA20F001674FD /* NSString+custom.m in Sources */,
-				D73435841C2CF0BF0065A1CA /* StarBlindView.m in Sources */,
+				D73435841C2CF0BF0065A1CA /* StarsView.m in Sources */,
 				D7EB2D0E1C2BA1CD001674FD /* UILabel+custom.m in Sources */,
 				D73435AA1C2D230A0065A1CA /* main.m in Sources */,
 				D734359C1C2D15880065A1CA /* AppDelegate.m in Sources */,

@@ -13,11 +13,13 @@
 
 #import "ViewController.h"
 #import "YMPowerDashboard.h"
-#import "StarBlindView.h"
+#import "StarsView.h"
 
 #import <Masonry.h>
 
 @interface ViewController ()
+<StarsViewDataSource,
+StarsViewDelegate>
 
 @property (strong, nonatomic) YMPowerDashboard *circleAnimationView;
 
@@ -25,7 +27,7 @@
 
 @property (strong, nonatomic) UIImageView *otherbgImageView;
 
-@property (strong, nonatomic) UIView *starBlindView;
+@property (strong, nonatomic) StarsView *starsView;
 
 @property (strong, nonatomic) CADisplayLink *displayLink;
 
@@ -57,23 +59,16 @@
 
 - (void)setupViews {
     
-    self.bgimageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"show_image"]];
-    self.otherbgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default_image"]];
-    [self.view addSubview:self.bgimageView];
-    [self.view addSubview:self.otherbgImageView];
-    [self.bgimageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    //star
+    self.starsView = [[StarsView alloc] initWithFrame:self.view.bounds];
+    self.starsView.delegate = self;
+    self.starsView.dateSource = self;
+    [self.view addSubview:self.starsView];
+    [self.starsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    [self.otherbgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
-    }];
+    [self.starsView starsShow];
     
-//    //star
-//    self.starBlindView = [[StarBlindView alloc] init];
-//    [self.view addSubview:self.starBlindView];
-//    [self.starBlindView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.equalTo(self.view);
-//    }];
     
     CGFloat defaultValue = 1.0f;
     CGRect frame = CGRectMake((SCREEN_WIDTH - 260.0f) * 0.5f, 80.0f, 260.0f, 260.0f);
@@ -103,8 +98,27 @@
     [self.view addSubview:slider];
 }
 
-#pragma mark - Handlers
+#pragma mark - StarsViewDelegate
 
+- (CGRect)centerRectForStarsView:(StarsView *)starsView {
+    return CGRectMake((SCREEN_WIDTH - 260.0f) * 0.5f, 80.0f, 260.0f, 260.0f);
+}
+
+- (CGFloat)centerPaddingForStarsView:(StarsView *)starsView {
+    return 40.0f;
+}
+
+#pragma mark - StarsViewDataSource
+
+- (NSArray<NSNumber *> *)starRadiusesForStarsView:(StarsView *)starsView {
+    return @[@4, @5, @3, @2];
+}
+
+- (NSUInteger)starCountForStarsView:(StarsView *)starsView {
+    return 35;
+}
+
+#pragma mark - Handlers
 
 - (void)setStrokeEndValue:(UISlider *)sender {
     [self.circleAnimationView setPercent:sender.value
