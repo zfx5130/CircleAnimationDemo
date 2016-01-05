@@ -13,7 +13,7 @@
 
 #import "ViewController.h"
 #import "YMPowerDashboard.h"
-#import "StarsView.h"
+#import "YMStarsView.h"
 
 #import <Masonry.h>
 
@@ -27,7 +27,7 @@ StarsViewDelegate>
 
 @property (strong, nonatomic) UIImageView *otherbgImageView;
 
-@property (strong, nonatomic) StarsView *starsView;
+@property (strong, nonatomic) YMStarsView *starsView;
 
 @property (strong, nonatomic) CADisplayLink *displayLink;
 
@@ -59,15 +59,18 @@ StarsViewDelegate>
 
 - (void)setupViews {
     
+    self.title = @"Demo";
+    
     //star
-    self.starsView = [[StarsView alloc] initWithFrame:self.view.bounds];
+    self.starsView = [[YMStarsView alloc] init];
     self.starsView.delegate = self;
     self.starsView.dateSource = self;
     [self.view addSubview:self.starsView];
     [self.starsView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        make.left.right.and.bottom.equalTo(self.starsView.superview);
+        make.top.equalTo(self.starsView.superview).with.offset(64.0f);
     }];
-    [self.starsView starsShow];
+    [self.starsView showStars];
     
     
     CGFloat defaultValue = 1.0f;
@@ -87,8 +90,7 @@ StarsViewDelegate>
     }];
     
     //slider
-    CGRect sliderFrame = CGRectMake(10.0f, SCREEN_HEIGHT - 40.0f, SCREEN_WIDTH - 20.0f, 20.0f);
-    UISlider *slider = [[UISlider alloc] initWithFrame:sliderFrame];
+    UISlider *slider = [[UISlider alloc] init];
     slider.continuous = NO;
     slider.minimumTrackTintColor = [UIColor whiteColor];
     [slider addTarget:self
@@ -96,26 +98,35 @@ StarsViewDelegate>
      forControlEvents:UIControlEventValueChanged];
     slider.value = defaultValue;
     [self.view addSubview:slider];
+    [slider mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(slider.superview).with.offset(-20.0f);
+        make.bottom.equalTo(slider.superview).with.offset(-20.0f);
+        make.centerX.equalTo(slider.superview);
+    }];
 }
 
 #pragma mark - StarsViewDelegate
 
-- (CGRect)centerRectForStarsView:(StarsView *)starsView {
-    return CGRectMake((SCREEN_WIDTH - 260.0f) * 0.5f, 80.0f, 260.0f, 260.0f);
+- (CGRect)centerRectForStarsView:(YMStarsView *)starsView {
+    return CGRectMake((SCREEN_WIDTH - 260.0f) * 0.5f, 0.0f, 260.0f, 260.0f);
 }
 
-- (CGFloat)centerPaddingForStarsView:(StarsView *)starsView {
-    return 40.0f;
+- (CGFloat)verticalPaddingForStarsView:(YMStarsView *)starsView {
+    return 10.0f;
+}
+
+- (CGFloat)horizontalPaddingForStarsView:(YMStarsView *)starsView {
+    return 10.0f;
 }
 
 #pragma mark - StarsViewDataSource
 
-- (NSArray<NSNumber *> *)starRadiusesForStarsView:(StarsView *)starsView {
-    return @[@4, @5, @3, @2];
+- (NSArray<NSNumber *> *)starRadiusesForStarsView:(YMStarsView *)starsView {
+    return @[@4, @5, @6, @2];
 }
 
-- (NSUInteger)starCountForStarsView:(StarsView *)starsView {
-    return 35;
+- (NSUInteger)starCountForStarsView:(YMStarsView *)starsView {
+    return 15;
 }
 
 #pragma mark - Handlers

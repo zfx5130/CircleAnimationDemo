@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class StarsView;
+@class YMStarsView;
 @protocol StarsViewDataSource <NSObject>
 
 /**
@@ -19,7 +19,7 @@
  *
  *  @return radiues
  */
-- (NSArray<NSNumber *> *)starRadiusesForStarsView:(StarsView *)starsView;
+- (NSArray<NSNumber *> *)starRadiusesForStarsView:(YMStarsView *)starsView;
 
 /**
  *  will return the default value if unset, default stars count is 20.
@@ -28,7 +28,7 @@
  *
  *  @return star count
  */
-- (NSUInteger)starCountForStarsView:(StarsView *)starsView;
+- (NSUInteger)starCountForStarsView:(YMStarsView *)starsView;
 
 @end
 
@@ -41,21 +41,30 @@
  *
  *  @return the center rect
  */
-- (CGRect)centerRectForStarsView:(StarsView *)starsView;
+- (CGRect)centerRectForStarsView:(YMStarsView *)starsView;
 
 /**
  *  the stars padding ,the stars will be set near +/- padding with the center rect circle,
-    default is +/- 20.0f.
+    default is +/- 20.0f.Horizontal
  *
  *  @param starsView
  *
- *  @return the center rect padding
+ *  @return the centerX padding
  */
-- (CGFloat)centerPaddingForStarsView:(StarsView *)starsView;
+- (CGFloat)horizontalPaddingForStarsView:(YMStarsView *)starsView;
+
+/**
+ *  the stars padding y ,the stars will be set near +/- padding with the center rect,Vertical
+ *
+ *  @param starsView starsView
+ *
+ *  @return the centerY padding
+ */
+- (CGFloat)verticalPaddingForStarsView:(YMStarsView *)starsView;
 
 @end
 
-@interface StarsView : UIView
+@interface YMStarsView : UIView
 
 /**
  *  dataSource , if set the starsViewDateSource method, must be set the dataSource
@@ -70,6 +79,6 @@
 /**
  *  star show
  */
-- (void)starsShow;
+- (void)showStars;
 
 @end

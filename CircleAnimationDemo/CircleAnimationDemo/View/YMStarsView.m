@@ -6,7 +6,7 @@
 //  Copyright © 2015年 thomas. All rights reserved.
 //
 
-#import "StarsView.h"
+#import "YMStarsView.h"
 #import <Masonry.h>
 
 static const NSUInteger kDefaultStarCount = 20;
@@ -23,47 +23,38 @@ static NSString *const kResueIdentifierStarsCollectionViewCell =
 @property (assign, nonatomic) CGFloat cellCount;
 @property (copy, nonatomic) NSArray *starRadiuses;
 @property (assign, nonatomic) CGRect centerRect;
-@property (assign, nonatomic) CGFloat centerPadding;
+@property (assign, nonatomic) CGFloat horizontalPadding;
+@property (assign, nonatomic) CGFloat verticalPadding;
 
 @end
 
 @implementation StarsCollectionViewFlowLayout
 
--(void)prepareLayout {
+- (void)prepareLayout {
     [super prepareLayout];
     
     CGRect rect = [self centerRect];
     self.cellCount = [[self collectionView] numberOfItemsInSection:0];
     self.center = CGPointMake(rect.origin.x + rect.size.width * 0.5f,
-                              rect.origin.y + 40 + rect.size.height * 0.5f);
+                              rect.origin.y + rect.size.height * 0.5f);
     self.radius = MIN(rect.size.width * 0.5f,
                       rect.size.height * 0.5f);
 }
 
--(CGSize)collectionViewContentSize {
+- (CGSize)collectionViewContentSize {
     return [self collectionView].frame.size;
 }
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)path {
-    UICollectionViewLayoutAttributes* attributes =
+    UICollectionViewLayoutAttributes *attributes =
     [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:path];
     CGFloat centerX = 0.0f;
     CGFloat centerY = 0.0f;
-    CGFloat valueX = ((double)arc4random() / 0x100000000) * self.centerPadding;
-    CGFloat valueY = ((double)arc4random() / 0x100000000) * self.centerPadding;
-    if (path.item <= self.cellCount / 4) {
-        centerX = valueX;
-        centerY = centerY;
-    } else if (path.item <= self.cellCount / 2) {
-        centerX = -valueX;
-        centerY = valueY;
-    } else if (path.item <= (self.cellCount * 3 / 4)) {
-        centerX = -valueX;
-        centerY = -valueY;
-    } else if (path.item <= self.cellCount) {
-        centerX = valueX;
-        centerY = -valueY;
-    }
+    CGFloat valueX = ((double)arc4random() / 0x100000000) * self.horizontalPadding;
+    CGFloat valueY = ((double)arc4random() / 0x100000000) * self.verticalPadding;
+    CGFloat value = (arc4random() % (1 - 0 + 1) + 0) ? -1 : 1;
+    centerX = valueX * value;
+    centerY = valueY * value;
     NSInteger y = path.item;
     if ([self.starRadiuses count]) {
         if (y > [self.starRadiuses count] - 1) {
@@ -72,18 +63,24 @@ static NSString *const kResueIdentifierStarsCollectionViewCell =
     } else {
         y = kDefalutCollectionViewItemSize;
     }
+    
+    if (fabs(centerX) < kDefaultCenterPadding) {
+        centerX = value * kDefaultCenterPadding;
+    }
+    if (fabs(centerY) < kDefaultCenterPadding) {
+        centerY = value * (kDefaultCenterPadding + 10);
+    }
     attributes.size = CGSizeMake([self.starRadiuses[y] integerValue],
                                  [self.starRadiuses[y] integerValue]);
-    attributes.alpha = ((double)arc4random() / 0x100000000);
     attributes.center = CGPointMake(self.center.x + centerX + self.radius * cosf(2 * path.item * M_PI / self.cellCount),
                                     self.center.y + centerY + self.radius * sinf(2 * path.item * M_PI / self.cellCount));
     return attributes;
 }
 
--(NSArray*)layoutAttributesForElementsInRect:(CGRect)rect {
-    NSMutableArray* attributes = [NSMutableArray array];
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
+    NSMutableArray *attributes = [NSMutableArray array];
     for (NSInteger i = 0 ; i < self.cellCount; i++) {
-        NSIndexPath* indexPath = [NSIndexPath indexPathForItem:i
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i
                                                      inSection:0];
         [attributes addObject:[self layoutAttributesForItemAtIndexPath:indexPath]];
     }
@@ -102,13 +99,15 @@ static NSString *const kResueIdentifierStarsCollectionViewCell =
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundColor = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor whiteColor];
-        
         self.contentView.layer.cornerRadius = CGRectGetWidth(self.contentView.frame) * 0.5f;
         self.contentView.layer.masksToBounds = YES;
-        CGFloat duration = ((double)arc4random() / 0x100000000) + 1;
-        [UIView animateWithDuration:duration delay:0.0f options:UIViewAnimationOptionAutoreverse |UIViewAnimationOptionCurveLinear | UIViewAnimationOptionRepeat animations:^{
+        CGFloat duration = ((double)arc4random() / 0x100000000) + 1.5;
+        self.contentView.alpha = arc4random() % (1 - 0 + 1) + 0;
+        [UIView animateWithDuration:duration delay:((double)arc4random() / 0x100000000) options:UIViewAnimationOptionAutoreverse |UIViewAnimationOptionCurveLinear | UIViewAnimationOptionRepeat animations:^{
             self.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
+            self.contentView.alpha = !self.contentView.alpha;
         } completion:nil];
     }
     return self;
@@ -117,7 +116,7 @@ static NSString *const kResueIdentifierStarsCollectionViewCell =
 @end
 
 
-@interface StarsView ()
+@interface YMStarsView ()
 <UICollectionViewDataSource,
 UICollectionViewDelegate,
 UICollectionViewDelegateFlowLayout>
@@ -127,9 +126,9 @@ UICollectionViewDelegateFlowLayout>
 
 @end
 
-@implementation StarsView
+@implementation YMStarsView
 
-#pragma mark -Lifecycle
+#pragma mark - Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -141,7 +140,7 @@ UICollectionViewDelegateFlowLayout>
 
 #pragma mark - Public
 
-- (void)starsShow {
+- (void)showStars {
     [self addStarsView];
 }
 
@@ -157,18 +156,18 @@ UICollectionViewDelegateFlowLayout>
 - (void)addStarsView {
     self.starsCollectionViewFlowLayout = [[StarsCollectionViewFlowLayout alloc] init];
     self.starsCollectionViewFlowLayout.centerRect = [self centerRect];
-    self.starsCollectionViewFlowLayout.centerPadding = [self centerPadding];
+    self.starsCollectionViewFlowLayout.horizontalPadding = [self horizontalPadding];
+    self.starsCollectionViewFlowLayout.verticalPadding = [self verticalPadding];
     self.starsCollectionViewFlowLayout.starRadiuses = [self starRadiuses];
     CGRect frame = CGRectZero;
     self.collectionView = [[UICollectionView alloc] initWithFrame:frame
                                              collectionViewLayout:self.starsCollectionViewFlowLayout];
-    self.collectionView.backgroundColor = [UIColor redColor];
+    self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
-    self.collectionView.backgroundColor = [UIColor clearColor];
     [self addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.superview);
+        make.edges.mas_equalTo(self);
     }];
     [self.collectionView registerClass:[StarsCollectionViewCell class]
             forCellWithReuseIdentifier:kResueIdentifierStarsCollectionViewCell];
@@ -198,9 +197,16 @@ UICollectionViewDelegateFlowLayout>
                       CGRectGetHeight(self.frame) - kDefalutCenterEdgeInsetsPadding * 2);
 }
 
-- (CGFloat)centerPadding {
-    if ([self.delegate respondsToSelector:@selector(centerPaddingForStarsView:)]) {
-        return [self.delegate centerPaddingForStarsView:self];
+- (CGFloat)horizontalPadding {
+    if ([self.delegate respondsToSelector:@selector(horizontalPaddingForStarsView:)]) {
+        return [self.delegate horizontalPaddingForStarsView:self];
+    }
+    return kDefaultCenterPadding;
+}
+
+- (CGFloat)verticalPadding {
+    if ([self.delegate respondsToSelector:@selector(verticalPaddingForStarsView:)]) {
+        return [self.delegate verticalPaddingForStarsView:self];
     }
     return kDefaultCenterPadding;
 }

@@ -8,19 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		38144B53FA0CAE58D4C82301 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CA6A4BDFEF9B61159C66A4 /* libPods.a */; };
-		D73435841C2CF0BF0065A1CA /* StarsView.m in Sources */ = {isa = PBXBuildFile; fileRef = D73435831C2CF0BF0065A1CA /* StarsView.m */; };
+		D73435841C2CF0BF0065A1CA /* YMStarsView.m in Sources */ = {isa = PBXBuildFile; fileRef = D73435831C2CF0BF0065A1CA /* YMStarsView.m */; };
 		D73435981C2D15720065A1CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D73435961C2D15720065A1CA /* Assets.xcassets */; };
 		D734359C1C2D15880065A1CA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D734359B1C2D15880065A1CA /* AppDelegate.m */; };
 		D734359F1C2D15940065A1CA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D734359E1C2D15940065A1CA /* ViewController.m */; };
 		D73435AA1C2D230A0065A1CA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D73435A91C2D230A0065A1CA /* main.m */; };
 		D73435AC1C2D234C0065A1CA /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D73435AB1C2D234C0065A1CA /* Info.plist */; };
-		D7CB17061C28F2C300347C66 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7CB17041C28F2C300347C66 /* Main.storyboard */; };
-		D7CB170B1C28F2C300347C66 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7CB17091C28F2C300347C66 /* LaunchScreen.storyboard */; };
 		D7CB17161C28F2C300347C66 /* CircleAnimationDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CB17151C28F2C300347C66 /* CircleAnimationDemoTests.m */; };
 		D7CB17211C28F2C300347C66 /* CircleAnimationDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CB17201C28F2C300347C66 /* CircleAnimationDemoUITests.m */; };
 		D7CB17351C28F62A00347C66 /* YMPowerDashboard.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CB17341C28F62A00347C66 /* YMPowerDashboard.m */; };
 		D7EB2D0E1C2BA1CD001674FD /* UILabel+custom.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EB2D0D1C2BA1CD001674FD /* UILabel+custom.m */; };
 		D7EB2D111C2BA20F001674FD /* NSString+custom.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EB2D101C2BA20F001674FD /* NSString+custom.m */; };
+		DD06A9941C3A1DC2001C2AE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD06A9921C3A1DC2001C2AE1 /* LaunchScreen.storyboard */; };
+		DD06A9951C3A1DC2001C2AE1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD06A9931C3A1DC2001C2AE1 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,8 +44,8 @@
 		03CA6A4BDFEF9B61159C66A4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1ED14C89DF011CC350E163E3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B61A23AB4A4DA44521F4B93D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		D73435821C2CF0BF0065A1CA /* StarsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarsView.h; sourceTree = "<group>"; };
-		D73435831C2CF0BF0065A1CA /* StarsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StarsView.m; sourceTree = "<group>"; };
+		D73435821C2CF0BF0065A1CA /* YMStarsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YMStarsView.h; sourceTree = "<group>"; };
+		D73435831C2CF0BF0065A1CA /* YMStarsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YMStarsView.m; sourceTree = "<group>"; };
 		D73435961C2D15720065A1CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D734359A1C2D15880065A1CA /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D734359B1C2D15880065A1CA /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -54,8 +54,6 @@
 		D73435A91C2D230A0065A1CA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D73435AB1C2D234C0065A1CA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7CB16F81C28F2C300347C66 /* CircleAnimationDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CircleAnimationDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D7CB17051C28F2C300347C66 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		D7CB170A1C28F2C300347C66 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D7CB17111C28F2C300347C66 /* CircleAnimationDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CircleAnimationDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7CB17151C28F2C300347C66 /* CircleAnimationDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleAnimationDemoTests.m; sourceTree = "<group>"; };
 		D7CB17171C28F2C300347C66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -68,6 +66,8 @@
 		D7EB2D0D1C2BA1CD001674FD /* UILabel+custom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+custom.m"; sourceTree = "<group>"; };
 		D7EB2D0F1C2BA20F001674FD /* NSString+custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+custom.h"; sourceTree = "<group>"; };
 		D7EB2D101C2BA20F001674FD /* NSString+custom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+custom.m"; sourceTree = "<group>"; };
+		DD06A9921C3A1DC2001C2AE1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DD06A9931C3A1DC2001C2AE1 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,8 +140,8 @@
 			children = (
 				D7CB17301C28F43F00347C66 /* Controller */,
 				D7CB17321C28F60B00347C66 /* View */,
+				DD06A9911C3A1DB9001C2AE1 /* Storyboard */,
 				D7CB172F1C28F43000347C66 /* AppDelegate */,
-				D7CB172E1C28F41E00347C66 /* StroryBoard */,
 				D7CB17311C28F45100347C66 /* Resource */,
 				D7CB16FB1C28F2C300347C66 /* Supporting Files */,
 				D7EB2D0B1C2BA19F001674FD /* Category */,
@@ -173,15 +173,6 @@
 				D7CB17221C28F2C300347C66 /* Info.plist */,
 			);
 			path = CircleAnimationDemoUITests;
-			sourceTree = "<group>";
-		};
-		D7CB172E1C28F41E00347C66 /* StroryBoard */ = {
-			isa = PBXGroup;
-			children = (
-				D7CB17041C28F2C300347C66 /* Main.storyboard */,
-				D7CB17091C28F2C300347C66 /* LaunchScreen.storyboard */,
-			);
-			path = StroryBoard;
 			sourceTree = "<group>";
 		};
 		D7CB172F1C28F43000347C66 /* AppDelegate */ = {
@@ -216,8 +207,8 @@
 			children = (
 				D7CB17331C28F62A00347C66 /* YMPowerDashboard.h */,
 				D7CB17341C28F62A00347C66 /* YMPowerDashboard.m */,
-				D73435821C2CF0BF0065A1CA /* StarsView.h */,
-				D73435831C2CF0BF0065A1CA /* StarsView.m */,
+				D73435821C2CF0BF0065A1CA /* YMStarsView.h */,
+				D73435831C2CF0BF0065A1CA /* YMStarsView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -231,6 +222,15 @@
 				D7EB2D101C2BA20F001674FD /* NSString+custom.m */,
 			);
 			path = Category;
+			sourceTree = "<group>";
+		};
+		DD06A9911C3A1DB9001C2AE1 /* Storyboard */ = {
+			isa = PBXGroup;
+			children = (
+				DD06A9921C3A1DC2001C2AE1 /* LaunchScreen.storyboard */,
+				DD06A9931C3A1DC2001C2AE1 /* Main.storyboard */,
+			);
+			path = Storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -338,10 +338,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD06A9941C3A1DC2001C2AE1 /* LaunchScreen.storyboard in Resources */,
 				D73435AC1C2D234C0065A1CA /* Info.plist in Resources */,
-				D7CB170B1C28F2C300347C66 /* LaunchScreen.storyboard in Resources */,
 				D73435981C2D15720065A1CA /* Assets.xcassets in Resources */,
-				D7CB17061C28F2C300347C66 /* Main.storyboard in Resources */,
+				DD06A9951C3A1DC2001C2AE1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,7 +402,7 @@
 				D734359F1C2D15940065A1CA /* ViewController.m in Sources */,
 				D7CB17351C28F62A00347C66 /* YMPowerDashboard.m in Sources */,
 				D7EB2D111C2BA20F001674FD /* NSString+custom.m in Sources */,
-				D73435841C2CF0BF0065A1CA /* StarsView.m in Sources */,
+				D73435841C2CF0BF0065A1CA /* YMStarsView.m in Sources */,
 				D7EB2D0E1C2BA1CD001674FD /* UILabel+custom.m in Sources */,
 				D73435AA1C2D230A0065A1CA /* main.m in Sources */,
 				D734359C1C2D15880065A1CA /* AppDelegate.m in Sources */,
@@ -439,27 +439,6 @@
 			targetProxy = D7CB171D1C28F2C300347C66 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		D7CB17041C28F2C300347C66 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D7CB17051C28F2C300347C66 /* Base */,
-			);
-			name = Main.storyboard;
-			path = ..;
-			sourceTree = "<group>";
-		};
-		D7CB17091C28F2C300347C66 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D7CB170A1C28F2C300347C66 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			path = ..;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		D7CB17231C28F2C300347C66 /* Debug */ = {

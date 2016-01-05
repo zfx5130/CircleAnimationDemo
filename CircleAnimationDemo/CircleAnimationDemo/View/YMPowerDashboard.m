@@ -17,7 +17,6 @@ static NSString *const kDefaultUnitLabelText = @"%";
 
 static const CGFloat kDefaultCircleWidth = 4.0f;
 static const CGFloat kDefaultCircleCount = 60.0f;
-static const CGFloat kDefaultPopSpringBounciness = 16.0f;
 static const CGFloat kDefalutUnitLabelFontSize = 16.0f;
 static const CGFloat kDefalutTitleLabelFontSize = 16.0f;
 static const CGFloat kDefalutBatteryLabelFontSize = 80.0f;
@@ -25,12 +24,9 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 
 @interface YMPowerDashboard ()
 
-@property (strong, nonatomic) CAShapeLayer *circleLayer;
-@property (strong, nonatomic) CAShapeLayer *innerCircleLayer;
 @property (strong, nonatomic) CAGradientLayer *gradientLayer;
 @property (strong, nonatomic) CAReplicatorLayer *replicatorLayer;
 @property (strong, nonatomic) CAReplicatorLayer *replicatorOtherLayer;
-@property (strong, nonatomic) CALayer *handleCircleLayer;
 @property (strong, nonatomic) CADisplayLink *displayLink;
 
 @property (strong, nonatomic) UILabel *titleLabel;
@@ -52,24 +48,14 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor clearColor];
-        [self addReplicatorLayer];
-        [self addReplicatorOtherLayer];
-//        [self addCircleLayer];
-//        [self addInnerCircleLayer];
-//        [self addHandleCircle];
-        self.animationInterval = 1.0f;
+        [self addWhiteReplicatorLayer];
+        [self addAlphaReplicatorLayer];
         [self setupViews];
     }
     return self;
 }
 
 #pragma mark - Setters
-
-- (void)setStrokeColor:(UIColor *)strokeColor {
-    _strokeColor = strokeColor;
-    self.circleLayer.strokeColor = strokeColor.CGColor;
-}
 
 - (void)setTitle:(NSString *)title {
     _title = title;
@@ -99,145 +85,24 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
 
 #pragma mark - Private
 
-- (void)addCircleLayer {
-    CGFloat lineWidth = kDefaultCircleWidth;
-    CGFloat radius = CGRectGetWidth(self.frame) * 0.5f -  lineWidth * 0.5f;
-    self.circleLayer = [CAShapeLayer layer];
-    CGRect rect = CGRectMake(lineWidth * 0.5f, lineWidth * 0.5f, radius * 2, radius * 2);
-    self.circleLayer.path = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:radius].CGPath;
-    self.circleLayer.strokeColor = self.tintColor.CGColor;
-    self.circleLayer.fillColor = [UIColor clearColor].CGColor;
-    self.circleLayer.lineWidth = lineWidth;
-    self.circleLayer.lineCap = kCALineCapRound;
-    [self.layer addSublayer:self.circleLayer];
-}
-
-- (void)addInnerCircleLayer {
-    CGFloat lineWidth = 1.0f;
-    CGFloat padding = 14.0f;
-    CGFloat radius = CGRectGetWidth(self.frame) * 0.5f - padding;
-    self.innerCircleLayer = [CAShapeLayer layer];
-    CGRect rect = CGRectMake(lineWidth * 0.5f + padding - 0.25f, lineWidth * 0.5f + padding - 0.25f, radius * 2, radius * 2);
-    self.innerCircleLayer.path =
-    [UIBezierPath bezierPathWithRoundedRect:rect
-                               cornerRadius:radius].CGPath;
-    self.innerCircleLayer.strokeColor = [UIColor whiteColor].CGColor;
-    self.innerCircleLayer.fillColor = [UIColor clearColor].CGColor;
-    self.innerCircleLayer.lineWidth = lineWidth;
-    self.innerCircleLayer.lineCap = kCALineCapRound;
-    [self.layer addSublayer:self.innerCircleLayer];
-
-    self.gradientLayer = [CAGradientLayer layer];
-    [self.layer addSublayer:self.gradientLayer];
-    self.gradientLayer.frame = self.bounds;
-    self.gradientLayer.mask = self.innerCircleLayer;
-    [self.layer addSublayer:self.gradientLayer];
-    
-    CAGradientLayer *rightGradientLayer = [CAGradientLayer layer];
-    rightGradientLayer.colors  = @[
-                                   (__bridge id)[UIColor colorWithWhite:1.0f
-                                                                  alpha:0.0f].CGColor,
-                                   (__bridge id)[UIColor colorWithWhite:1.0f
-                                                                  alpha:0.3].CGColor,
-                                   (__bridge id)[UIColor colorWithWhite:1.0f
-                                                                  alpha:0.5f].CGColor
-                                   ];
-    rightGradientLayer.locations = @[
-                                     @(0.0f),
-                                     @(0.5f),
-                                     @(1.0f)
-                                     ];
-    rightGradientLayer.startPoint = CGPointMake(0, 0.0f);
-    rightGradientLayer.endPoint = CGPointMake(0.0f, 1.0f);
-    rightGradientLayer.frame = CGRectMake(self.bounds.size.width * 0.5f,
-                                          0,
-                                          self.bounds.size.width * 0.5f,
-                                          self.bounds.size.height);
-    [self.gradientLayer addSublayer:rightGradientLayer];
-    
-    CAGradientLayer *leftGradientLayer = [CAGradientLayer layer];
-    leftGradientLayer.colors  = @[
-                                   (__bridge id)[UIColor colorWithWhite:1.0f
-                                                                  alpha:0.5f].CGColor,
-                                   (__bridge id)[UIColor colorWithWhite:1.0f
-                                                                  alpha:0.8].CGColor,
-                                   (__bridge id)[UIColor colorWithWhite:1.0f
-                                                                  alpha:1.0f].CGColor
-                                   ];
-    leftGradientLayer.locations = @[
-                                     @(0.0f),
-                                     @(0.5f),
-                                     @(1.0f)
-                                     ];
-    leftGradientLayer.startPoint = CGPointMake(0, 1.0f);
-    leftGradientLayer.endPoint = CGPointMake(0, 0.0f);
-    leftGradientLayer.frame = CGRectMake(0.0f,
-                                         0.0f,
-                                         self.bounds.size.width * 0.5f,
-                                         self.bounds.size.height);
-    [self.gradientLayer addSublayer:leftGradientLayer];
-    
-}
-
-- (void)animateToStrokeEnd:(CGFloat)strokeEnd {
-    POPSpringAnimation *strokeAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPShapeLayerStrokeEnd];
-    strokeAnimation.toValue = @(strokeEnd);
-    strokeAnimation.springBounciness = kDefaultPopSpringBounciness;
-    strokeAnimation.removedOnCompletion = NO;
-    [self.circleLayer pop_addAnimation:strokeAnimation
-                                forKey:@"layerStrokeAnimation"];
-    
-    POPSpringAnimation *innerStrokeAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPShapeLayerStrokeEnd];
-    innerStrokeAnimation.toValue = @(strokeEnd);
-    innerStrokeAnimation.springBounciness = kDefaultPopSpringBounciness;
-    innerStrokeAnimation.removedOnCompletion = NO;
-    [self.innerCircleLayer pop_addAnimation:innerStrokeAnimation
-                                     forKey:@"layerStrokeAnimation"];
-}
-
-- (void)addHandleCircle {
-    self.circleView = [[UIView alloc] init];
-    [self addSubview:self.circleView];
-    [self.circleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
-    }];
-    
-    self.circleView.backgroundColor = [UIColor clearColor];
-    self.handleCircleLayer = [CALayer layer];
-    self.handleCircleLayer.bounds = CGRectMake(0.0f, 0.0f, kDefaultCircleWidth, kDefaultCircleWidth);
-    self.handleCircleLayer.position =
-    CGPointMake(CGRectGetWidth(self.frame) * 0.5f - kDefaultCircleWidth * 0.5f,
-                kDefaultCircleWidth * 0.5f + 12.0f);
-    self.handleCircleLayer.cornerRadius = kDefaultCircleWidth * 0.5f;
-    self.handleCircleLayer.borderColor = [UIColor whiteColor].CGColor;
-    self.handleCircleLayer.borderWidth = 1.0f;
-    [self.circleView.layer addSublayer:self.handleCircleLayer];
-}
-
-- (void)addHandleCircleAnimationWithStrokeEnd:(CGFloat)strokeEnd {
-    CGAffineTransform endAngle =
-    CGAffineTransformMakeRotation((strokeEnd + 0.0045) * 360 * (M_PI / 180.0f));
-    [UIView animateWithDuration:0.15f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        self.circleView.transform = endAngle;
-        self.circleView.alpha = strokeEnd;
-    } completion:nil];
-}
-
-- (void)addReplicatorLayer {
+- (void)addWhiteReplicatorLayer {
     [self addReplicatorLayerWith:self.replicatorLayer
                      circleCount:kDefaultCircleCount
-                           alpha:0.6f];
+                           alpha:0.6f
+                        duration:3.0f];
 }
 
-- (void)addReplicatorOtherLayer {
+- (void)addAlphaReplicatorLayer {
     [self addReplicatorLayerWith:self.replicatorOtherLayer
                      circleCount:kDefaultCircleCount * 2
-                           alpha:0.2f];
+                           alpha:0.2f
+                        duration:3.0f];
 }
 
 - (void)addReplicatorLayerWith:(CAReplicatorLayer *)replicatorLayer
                    circleCount:(NSUInteger)circleCount
-                         alpha:(CGFloat)alpha {
+                         alpha:(CGFloat)alpha
+                      duration:(CGFloat)duration {
     replicatorLayer = [CAReplicatorLayer layer];
     replicatorLayer.frame = self.bounds;
     replicatorLayer.backgroundColor = [UIColor clearColor].CGColor;
@@ -253,17 +118,21 @@ static const CGFloat kDefalutSubTitleLabelFontSize = 16.0f;
     replicatorLayer.instanceCount = circleCount;
     CGFloat angle = (2 * M_PI) / (circleCount);
     replicatorLayer.instanceTransform = CATransform3DMakeRotation(angle, 0, 0, 1);
+    
     CABasicAnimation *basicAnimation =
     [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    basicAnimation.fromValue = @1.2;
-    basicAnimation.toValue = @0.7;
-    basicAnimation.duration = 3.0f;
+    basicAnimation.fromValue = @1.1;
+    basicAnimation.toValue = @0.6;
+    basicAnimation.duration = duration;
     basicAnimation.repeatCount = HUGE;
+    basicAnimation.autoreverses = YES;
     [circle addAnimation:basicAnimation
                   forKey:nil];
 }
 
 - (void)setupViews {
+    self.animationInterval = 1.0f;
+    self.backgroundColor = [UIColor clearColor];
     [self setupTitleLabel];
     [self setupBatteryLabel];
     [self setupSubTitleLabel];
